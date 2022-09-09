@@ -1,7 +1,7 @@
 import { areIntervalsOverlapping } from "date-fns";
 
 import { Appointment } from "../../entities/appointment";
-import { AppointmentsRepositoryProtocol } from "./../appointments-repository-protocol";
+import { AppointmentsRepositoryProtocol } from "../appointments-repository-protocol";
 
 export class InMemoryAppointmentsRepository
   implements AppointmentsRepositoryProtocol
