@@ -1,4 +1,4 @@
-import { Appointment } from "./../entities/appointment";
+import { Appointment } from "../entities/appointment";
 
 interface CreateAppointmentRequest {
   customer: string;
