@@ -35,3 +35,12 @@ test("cannot create an appointment with end date before start date", () => {
     return new Appointment(appointmentProps);
   }).toThrow();
 });
+
+test("cannot create an appointment start date before now", () => {
+  const { appointmentProps } = makeAppointmentProps();
+  appointmentProps.startsAt.setDate(new Date().getDate() - 1);
+
+  expect(() => {
+    return new Appointment(appointmentProps);
+  }).toThrow();
+});
