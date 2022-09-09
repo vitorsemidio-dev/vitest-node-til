@@ -31,8 +31,53 @@ describe("Create Appointment Use Case", () => {
     const { createAppointmentUseCase } = makeSut();
     const createAppointmentRequest = makeCreateAppointmentRequest();
 
-    expect(
+    await expect(
       createAppointmentUseCase.execute(createAppointmentRequest),
     ).resolves.toBeInstanceOf(Appointment);
+  });
+
+  it("should not be able to create an Appointment with overlapping dates", async () => {
+    const { createAppointmentUseCase } = makeSut();
+    const customer = "John Doe";
+    const startsAt = getFutureDate("2022-10-10");
+    const endsAt = getFutureDate("2022-10-15");
+
+    await createAppointmentUseCase.execute({
+      customer,
+      startsAt,
+      endsAt,
+    });
+
+    await expect(
+      createAppointmentUseCase.execute({
+        customer,
+        startsAt: getFutureDate("2022-10-14"),
+        endsAt: getFutureDate("2022-10-18"),
+      }),
+    ).rejects.toBeInstanceOf(Error);
+
+    await expect(
+      createAppointmentUseCase.execute({
+        customer,
+        startsAt: getFutureDate("2022-10-08"),
+        endsAt: getFutureDate("2022-10-14"),
+      }),
+    ).rejects.toBeInstanceOf(Error);
+
+    await expect(
+      createAppointmentUseCase.execute({
+        customer,
+        startsAt: getFutureDate("2022-10-12"),
+        endsAt: getFutureDate("2022-10-14"),
+      }),
+    ).rejects.toBeInstanceOf(Error);
+
+    await expect(
+      createAppointmentUseCase.execute({
+        customer,
+        startsAt: getFutureDate("2022-10-05"),
+        endsAt: getFutureDate("2022-10-20"),
+      }),
+    ).rejects.toBeInstanceOf(Error);
   });
 });
