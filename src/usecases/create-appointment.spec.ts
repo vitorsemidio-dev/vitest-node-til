@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { Appointment } from "../entities/appointment";
 import { getFutureDate } from "../tests/utils/get-future-date";
+import { InMemoryAppointmentsRepository } from "./../repositories/in-memory/in-memory-appointment-repository";
 import { CreateAppointmentUseCase } from "./create-appointment";
 
 const makeCreateAppointmentRequest = () => {
@@ -17,14 +18,17 @@ const makeCreateAppointmentRequest = () => {
   return createAppointmentRequest;
 };
 
-const makeCreateAppointmentUseCase = () => {
-  const createAppointmentUseCase = new CreateAppointmentUseCase();
-  return createAppointmentUseCase;
+const makeSut = () => {
+  const inMemoryAppointmentsRepository = new InMemoryAppointmentsRepository();
+  const createAppointmentUseCase = new CreateAppointmentUseCase(
+    inMemoryAppointmentsRepository,
+  );
+  return { createAppointmentUseCase, inMemoryAppointmentsRepository };
 };
 
 describe("Create Appointment Use Case", () => {
   it("should be able to create an Appointment", async () => {
-    const createAppointmentUseCase = makeCreateAppointmentUseCase();
+    const { createAppointmentUseCase } = makeSut();
     const createAppointmentRequest = makeCreateAppointmentRequest();
 
     expect(
